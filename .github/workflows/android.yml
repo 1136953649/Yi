@@ -23,6 +23,12 @@ jobs:
           distribution: 'temurin'
           java-version: 17
 
+      - name: Check Environment Variables
+        run: |
+          echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}"
+          echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}"
+          echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}"
+
       # 3️⃣ 解码 keystore 文件
       - name: Decode keystore
         run: echo "${{ secrets.SIGNING_KEYSTORE_B64 }}" | base64 --decode > app/keystore.jks
@@ -45,6 +51,10 @@ jobs:
       # 6️⃣ 构建 Release APK
       - name: Build Release APK
         run: ./gradlew clean assembleRelease
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
       # 7️⃣ 检查 APK 文件
       - name: Check APK size
