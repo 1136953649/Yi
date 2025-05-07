@@ -9,12 +9,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      SIGNING_KEYSTORE_PATH: ~/.android/keystore.jks
-      SIGNING_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-      SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-      SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-
     steps:
       # 1️⃣ 检出代码
       - name: Checkout code
@@ -31,9 +25,7 @@ jobs:
 
       # 3️⃣ 解码 keystore 文件
       - name: Decode keystore
-        run: |
-          mkdir -p ~/.android
-          echo "${{ secrets.SIGNING_KEYSTORE_B64 }}" | base64 --decode > ~/.android/keystore.jks
+        run: echo "${{ secrets.SIGNING_KEYSTORE_B64 }}" | base64 --decode > app/keystore.jks
 
       # 4️⃣ 设置 Gradle 缓存
       - name: Cache Gradle
